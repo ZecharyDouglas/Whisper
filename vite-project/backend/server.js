@@ -11,11 +11,15 @@ import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
 import { expressMiddleware } from "@as-integrations/express5";
 import cors from "cors";
+import { PubSub, withFilter } from "graphql-subscriptions";
+import { subscribe } from "diagnostics_channel";
 
 dotenv.config();
 AWS.config.update({ region: "us-east-1" });
 //creating the amazon dynamodb service client to access dynamodb
 var ddbDocClient = new AWS.DynamoDB.DocumentClient();
+//PubSub instance allowing you to publish and listen for changes associated with a particular label
+const pubsub = new PubSub();
 
 const typeDefs = `#graphql 
       type Query{
@@ -35,6 +39,11 @@ const typeDefs = `#graphql
             username : String!
             relationship_id : String!
       }
+      type Message {
+            sender_id: String!
+            relationship_id:String!
+            message: String!
+      }
       type Mutation{
             login(email: String! , password:String! ): AuthPayload
             createUser(email: String! , password:String! , name: String! , phonenumber: String!): User
@@ -44,7 +53,11 @@ const typeDefs = `#graphql
             token: String!
             user: User!
       }
+      type Subscription{
+            messageCreated(relationship_id: String!): Message!
+      }
 `;
+
 const resolvers = {
   Query: {
     hello: () => "Hello from Apollo!",
@@ -168,12 +181,31 @@ const resolvers = {
       };
       try {
         const data = await ddbDocClient.put(params).promise();
+        pubsub.publish("MESSAGE_CREATED", {
+          messageCreated: {
+            sender_id: user_id,
+            relationship_id: relationship_id,
+            message: message,
+          },
+        });
         if (data) console.log(data);
         return "Message successfully sent.";
       } catch (error) {
         console.log("Error sending message. ", error);
         return "Message could not be sent.";
       }
+    },
+  },
+  Subscription: {
+    messageCreated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator("MESSAGE_CREATED"),
+        (payload, variables) => {
+          return (
+            payload.messageCreated.relationship_id === variables.relationship_id
+          );
+        }
+      ),
     },
   },
 };
@@ -215,6 +247,11 @@ const server = new ApolloServer({
 
 await server.start();
 
-app.use("/graphql", cors(), express.json(), expressMiddleware(server));
+app.use(
+  "/graphql",
+  cors({ origin: "*" }),
+  express.json(),
+  expressMiddleware(server)
+);
 await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
 console.log(`🚀 Server ready at http://localhost:4000/`);
