@@ -1,38 +1,30 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { GETUSERFRIENDS } from "./graphql/gqueries";
-import { SENDMESSAGE } from "./graphql/gqueries";
 import { useAuth } from "./helper/AuthContext";
-import { useApolloClient } from "@apollo/client";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
+import { useMutation, useSubscription } from "@apollo/client";
+import { GETUSERFRIENDS, SENDMESSAGE } from "./graphql/gqueries";
+import ChatModal from "./ChatModal";
 
 export default function HomePage() {
   const { logout, user } = useAuth();
   const [chatMessage, setchatMessage] = useState("");
-  const client = useApolloClient();
-  const [friends, setFriends] = useState([]);
-  const [sendMessage, { data: sendMessageResponse, loading, error }] =
-    useMutation(SENDMESSAGE);
+  const [friends, setFriends] = useState();
+  //sendMessage mutation to send message
+  const [sendMessage] = useMutation(SENDMESSAGE);
+
+  //get user friends query to ge the friends and relationship ids
+
+  const { data, error } = useQuery(GETUSERFRIENDS, {
+    variables: { user_id: user.id },
+  });
 
   useEffect(() => {
-    const fetchFriends = async () => {
-      if (!user || !user.id) {
-        return;
-      }
-      try {
-        const { data, error } = await client.query({
-          query: GETUSERFRIENDS,
-          variables: { user_id: user.id },
-        });
-        setFriends(data.currentUserFriends);
-        console.log(friends);
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    fetchFriends();
-  }, [user, client, friends]);
+    if (data?.currentUserFriends) {
+      setFriends(data.currentUserFriends);
+    }
+  }, [data]);
 
   const dummyDiscover = [1, 2, 3, 4, 5, 6, 7, 8];
   const navigate = useNavigate();
@@ -125,17 +117,7 @@ export default function HomePage() {
                         </form>
                         <h3 className="font-bold text-lg">{friend.username}</h3>
                         {/* beginning of chat component */}
-                        <div className="chat chat-start">
-                          <div className="chat-bubble">
-                            It's over Anakin,
-                            <br />I have the high ground.
-                          </div>
-                        </div>
-                        <div className="chat chat-end">
-                          <div className="chat-bubble">
-                            You underestimate my power!
-                          </div>
-                        </div>
+                        <ChatModal friend={friend} />
                         {/* end of the chat component */}
                         <textarea
                           className="textarea w-full mt-30"

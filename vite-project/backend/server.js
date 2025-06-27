@@ -27,7 +27,7 @@ const typeDefs = `#graphql
             getUsers: [String]
             currentUser: User
             currentUserFriends(user_id: String!): [Friend]
-            getChatMessage(user_id: String! , relationship_id: String!): String!
+            getChatMessages(relationship_id: String!): [Message]
       }
       type User{
             id : ID!
@@ -118,6 +118,29 @@ const resolvers = {
       } catch (error) {
         console.log("Could not fetch friends:", error);
         throw new Error("Could not fetch friends, do you have any?");
+      }
+    },
+    getChatMessages: async (_, { relationship_id }) => {
+      const params = {
+        TableName: "Messages",
+        FilterExpression: "relationship_id = :relationship_id",
+        ExpressionAttributeValues: { ":relationship_id": relationship_id },
+      };
+      try {
+        const data = await ddbDocClient.scan(params).promise();
+        if (data && data.Count > 0) {
+          const response = data.Items.map((message) => {
+            return {
+              sender_id: message.sender_id,
+              relationship_id: message.relationship_id,
+              message: message.message,
+            };
+          });
+          return response;
+        }
+      } catch (error) {
+        console.log("Could not fetch messages: ", error);
+        throw new Error("Messages could not be fetched");
       }
     },
   },

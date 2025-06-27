@@ -62,3 +62,22 @@ export const SENDMESSAGE = gql`
     )
   }
 `;
+
+export const MESSAGE_SUBSCRIPTION = gql`
+  subscription OnMessageAdded($relationship_id: String!) {
+    messageCreated(relationship_id: $relationship_id) {
+      relationship_id
+      sender_id
+      message
+    }
+  }
+`;
+export const GET_MESSAGES = gql`
+  query ChatMessages($relationship_id: String!) {
+    getChatMessages(relationship_id: $relationship_id) {
+      relationship_id
+      sender_id
+      message
+    }
+  }
+`;
