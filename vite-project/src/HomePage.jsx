@@ -140,7 +140,6 @@ export default function HomePage() {
                                 if (response?.data?.sendMessage) {
                                   console.log(response?.data?.sendMessage);
                                   setchatMessage("");
-                                  alert("Message sent successfully");
                                 }
                               } catch (error) {
                                 console.log("Error sending message: ", error);
