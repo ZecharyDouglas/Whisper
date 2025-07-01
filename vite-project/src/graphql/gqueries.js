@@ -20,9 +20,13 @@ export const CREATE_ACCOUNT = gql`
   }
 `;
 
-export const USERS = gql`
-  query {
-    getUsers
+export const GET_USERS = gql`
+  query GetUsers {
+    getUsers {
+      id
+      email
+      username
+    }
   }
 `;
 

@@ -2,7 +2,6 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import { useQuery, gql } from "@apollo/client";
-import { USERS } from "./graphql/gqueries";
 function App() {
   const { data, loading, error } = useQuery(USERS);
   data ? console.log(data) : console.error(error);

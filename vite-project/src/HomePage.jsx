@@ -4,29 +4,45 @@ import { useNavigate } from "react-router";
 import { useAuth } from "./helper/AuthContext";
 import { useApolloClient, useQuery } from "@apollo/client";
 import { useMutation, useSubscription } from "@apollo/client";
-import { GETUSERFRIENDS, SENDMESSAGE } from "./graphql/gqueries";
+import { GETUSERFRIENDS, SENDMESSAGE, GET_USERS } from "./graphql/gqueries";
 import ChatModal from "./ChatModal";
+import { Link } from "react-router";
+import Profile from "./Profile";
 
 export default function HomePage() {
   const { logout, user } = useAuth();
   const [chatMessage, setchatMessage] = useState("");
   const [friends, setFriends] = useState();
+  const [users, setUsers] = useState();
   //sendMessage mutation to send message
   const [sendMessage] = useMutation(SENDMESSAGE);
 
   //get user friends query to ge the friends and relationship ids
-
-  const { data, error } = useQuery(GETUSERFRIENDS, {
+  const {
+    data: friendsData,
+    error: friendsError,
+    loading: friendsLoading,
+  } = useQuery(GETUSERFRIENDS, {
     variables: { user_id: user.id },
   });
+  //getting all the users to compare against the friends for the discover section
+  const {
+    data: allUsers,
+    error: allUsersError,
+    loading: usersLoading,
+  } = useQuery(GET_USERS);
 
   useEffect(() => {
-    if (data?.currentUserFriends) {
-      setFriends(data.currentUserFriends);
+    if (friendsData?.currentUserFriends) {
+      console.log(friendsData.currentUserFriends);
+      setFriends(friendsData.currentUserFriends);
     }
-  }, [data]);
+    if (allUsers?.getUsers) {
+      console.log(allUsers.getUsers);
+      setUsers(allUsers.getUsers);
+    }
+  }, [friendsData, allUsers]);
 
-  const dummyDiscover = [1, 2, 3, 4, 5, 6, 7, 8];
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -69,18 +85,13 @@ export default function HomePage() {
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
               >
                 <li>
-                  <a className="justify-between">
-                    Profile
-                    <span className="badge">New</span>
-                  </a>
+                  <Link to="/profile">Profile</Link>
                 </li>
                 <li>
                   <a>Settings</a>
                 </li>
                 <li>
-                  <button className="btn" onClick={handleLogout}>
-                    Logout
-                  </button>
+                  <button onClick={handleLogout}>Logout</button>
                 </li>
               </ul>
             </div>
@@ -161,7 +172,7 @@ export default function HomePage() {
             <br />
             {/* render discovery cards here */}
             <div className=" grid grid-cols-4">
-              {dummyDiscover.map((discover, i) => (
+              {users.map((user, i) => (
                 <div className="card bg-base-100 w-70 shadow-sm m-2">
                   <figure>
                     <img
@@ -172,7 +183,7 @@ export default function HomePage() {
                   <div className="card-body">
                     <h2 className="card-title">
                       {/* name should go here */}
-                      Name
+                      {user.username}
                       <div className="badge badge-secondary">NEW</div>
                     </h2>
 

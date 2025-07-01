@@ -24,7 +24,7 @@ const pubsub = new PubSub();
 const typeDefs = `#graphql 
       type Query{
             hello: String
-            getUsers: [String]
+            getUsers: [User]
             currentUser: User
             currentUserFriends(user_id: String!): [Friend]
             getChatMessages(relationship_id: String!): [Message]
@@ -69,8 +69,14 @@ const resolvers = {
           console.log("No Items found in DynamoDB scan.");
           return [];
         }
-        console.log("Items returned:", data.Items);
-        return data.Items.map((item) => item.name);
+        console.log(data.Items);
+        const response = data.Items.map((item) => ({
+          id: item.user_id,
+          email: item.email,
+          username: item.name,
+        }));
+        console.log(response);
+        return response;
       } catch (error) {
         console.error("Could not fetch users", error);
         throw new Error("Could not return users");
@@ -84,6 +90,7 @@ const resolvers = {
       };
       try {
         const data = ddbDocClient.scan(params).promise();
+        //console.log(data.Items);
       } catch (error) {
         console.error("Failed to authenticate user.", error);
         throw new Error("Could not authenticate user.");
@@ -173,7 +180,7 @@ const resolvers = {
       };
       try {
         const data = await ddbDocClient.scan(params).promise();
-        console.log("Login data.Items:", data.Items); // DEBUGGING
+
         if (data.Items && data.Items.length > 0) {
           const user = data.Items[0];
           const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET);
