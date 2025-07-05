@@ -12,8 +12,8 @@ import Profile from "./Profile";
 export default function HomePage() {
   const { logout, user } = useAuth();
   const [chatMessage, setchatMessage] = useState("");
-  const [friends, setFriends] = useState();
-  const [users, setUsers] = useState();
+  const [friends, setFriends] = useState([]);
+  const [users, setUsers] = useState([]);
   //sendMessage mutation to send message
   const [sendMessage] = useMutation(SENDMESSAGE);
 

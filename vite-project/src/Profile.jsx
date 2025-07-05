@@ -3,7 +3,7 @@ import React from "react";
 export default function Profile() {
   return (
     <div className=" h-screen w-screen flex flex-col items-center justify-center">
-      <div className="flex flex-col items-center rounded-4xl p-20 bg-base-200 h-2/3 w-2/3 shadow-lg">
+      <div className="flex flex-col items-center rounded-4xl p-20 bg-base-200 h-auto w-auto shadow-lg">
         <div className="flex flex-col">
           <div className=" w-full">
             <h1>Change your profile information</h1>

@@ -21,10 +21,12 @@ export default function Login() {
       {/* login card parent */}
       <div className="flex flex-row h-screen w-screen justify-center items-center">
         {/* end of the login card box */}
-        <div className=" flex items-center justify-center h-auto w-4/12 bg-white rounded-md">
-          <div className="flex flex-col mt-10">
-            <h3 className=" text-black text-center mb-2">Welcome to Whisper</h3>
-            <label className="input validator rounded-md">
+        <div className=" flex items-center justify-center h-1/2 w-1/2 bg-base-200">
+          <div className="flex flex-col items-center justify-center p-10 w-full rounded-3xl">
+            <h3 className=" text-white mb-10 text-center text-5xl">
+              Welcome to Whisper
+            </h3>
+            <label className="input validator rounded-md w-2/3">
               <svg
                 className="h-[1em] opacity-50"
                 xmlns="http://www.w3.org/2000/svg"
@@ -44,6 +46,7 @@ export default function Login() {
               <input
                 type="text"
                 required
+                className="w-full"
                 placeholder="Email"
                 pattern="[A-Za-z][A-Za-z0-9\-]*"
                 minlength="3"
@@ -55,7 +58,7 @@ export default function Login() {
                 }}
               />
             </label>
-            <label className="input validator mt-5 rounded-md">
+            <label className="input validator mt-5 rounded-md w-2/3">
               <svg
                 className="h-[1em] opacity-50"
                 xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +104,7 @@ export default function Login() {
               At least one uppercase letter
             </p>
             <button
-              className="btn p-3 bg-base-300 mt-5 rounded-md"
+              className="btn p-3 bg-base-300 mt-5 rounded-md w-2/3"
               onClick={async () => {
                 try {
                   const response = await loginUser({
@@ -128,7 +131,7 @@ export default function Login() {
               Log In
             </button>
             <button
-              className="btn p-3 bg-base-300 mt-5 mb-5 rounded-md"
+              className="btn p-3 bg-base-300 mt-5 mb-5 rounded-md w-2/3"
               onClick={handleCreateAccount}
             >
               Create An Account
