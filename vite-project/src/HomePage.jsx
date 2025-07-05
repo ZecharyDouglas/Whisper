@@ -109,60 +109,72 @@ export default function HomePage() {
               <h1 className=" text-5xl text-center mb-5">Your Friends</h1>
               {/* render friends components here */}
               {friends.map((friend, i) => (
-                <div className=" btn my-3 text-center " key={i}>
-                  <button
-                    className="btn btn-ghost w-full"
+                <div className="grid grid-cols-4">
+                  <div
+                    className=" btn my-3 mx-3 text-center col-span-3"
                     key={i}
-                    onClick={() =>
-                      document.getElementById(`my_modal_${i}`).showModal()
-                    }
                   >
-                    {/* beginning of the modal box */}
-                    <dialog id={`my_modal_${i}`} className="modal ">
-                      <div className="modal-box h-2/5 w-2/5 fixed bottom-5 right-5  ">
-                        <form method="dialog">
-                          {/* if there is a button in form, it will close the modal */}
-                          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                            ✕
-                          </button>
-                        </form>
-                        <h3 className="font-bold text-lg">{friend.username}</h3>
-                        {/* beginning of chat component */}
-                        <ChatModal friend={friend} />
-                        {/* end of the chat component */}
-                        <textarea
-                          className="textarea w-full mt-30"
-                          placeholder="Send a message"
-                          value={chatMessage}
-                          onChange={(e) => {
-                            setchatMessage(e.target.value);
-                          }}
-                          onKeyDown={async (e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              try {
-                                const response = await sendMessage({
-                                  variables: {
-                                    user_id: user.id,
-                                    relationship_id: friend.relationship_id,
-                                    message: chatMessage,
-                                  },
-                                });
-                                if (response?.data?.sendMessage) {
-                                  console.log(response?.data?.sendMessage);
-                                  setchatMessage("");
+                    <button
+                      className="btn btn-ghost w-full"
+                      key={i}
+                      onClick={() =>
+                        document.getElementById(`my_modal_${i}`).showModal()
+                      }
+                    >
+                      {/* beginning of the modal box */}
+                      <dialog id={`my_modal_${i}`} className="modal ">
+                        <div className="modal-box h-2/5 w-2/5 fixed bottom-5 right-5  ">
+                          <form method="dialog">
+                            {/* if there is a button in form, it will close the modal */}
+                            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                              ✕
+                            </button>
+                          </form>
+                          <h3 className="font-bold text-lg">
+                            {friend.username}
+                          </h3>
+                          {/* beginning of chat component */}
+                          <ChatModal friend={friend} />
+                          {/* end of the chat component */}
+                          <textarea
+                            className="textarea w-full mt-30"
+                            placeholder="Send a message"
+                            value={chatMessage}
+                            onChange={(e) => {
+                              setchatMessage(e.target.value);
+                            }}
+                            onKeyDown={async (e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                try {
+                                  const response = await sendMessage({
+                                    variables: {
+                                      user_id: user.id,
+                                      relationship_id: friend.relationship_id,
+                                      message: chatMessage,
+                                    },
+                                  });
+                                  if (response?.data?.sendMessage) {
+                                    console.log(response?.data?.sendMessage);
+                                    setchatMessage("");
+                                  }
+                                } catch (error) {
+                                  console.log("Error sending message: ", error);
                                 }
-                              } catch (error) {
-                                console.log("Error sending message: ", error);
                               }
-                            }
-                          }}
-                        ></textarea>
-                      </div>
-                    </dialog>
-                    <h2>{friend.username}</h2>
-                    {/* end of the modal box */}
-                  </button>
+                            }}
+                          ></textarea>
+                        </div>
+                      </dialog>
+                      <h2>{friend.username}</h2>
+                      {/* end of the modal box */}
+                    </button>
+                  </div>
+                  <div className=" col-span-1">
+                    <button className="btn btn-soft btn-error my-3 place-items-center">
+                      Delete
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
