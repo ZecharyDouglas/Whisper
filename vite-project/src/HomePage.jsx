@@ -103,7 +103,7 @@ export default function HomePage() {
           <span className="loading loading-ring loading-lg"></span>
         </div>
       ) : (
-        <div className=" grid grid-cols-4 mt-5 h-auto ">
+        <div className=" grid grid-cols-4 mt-5 h-auto w-full">
           <div className="col-span-1 bg-base-300">
             <div className="flex flex-col">
               <h1 className=" text-5xl text-center mb-5">Your Friends</h1>
@@ -167,11 +167,12 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-          <div className=" col-span-3 bg-base-200 flex flex-col">
-            <h3 className=" text-center text-5xl">Discover</h3>
-            <br />
+          <div className=" col-span-3 bg-base-200 flex flex-col items-center">
+            <div className=" w-full">
+              <h3 className=" text-center text-5xl">Discover</h3>
+            </div>
             {/* render discovery cards here */}
-            <div className=" grid grid-cols-4">
+            <div className=" grid grid-cols-3 place-items-center w-full p-5">
               {users.map((user, i) => (
                 <div className="card bg-base-100 w-70 shadow-sm m-2">
                   <figure>

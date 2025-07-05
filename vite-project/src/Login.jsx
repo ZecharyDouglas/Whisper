@@ -22,7 +22,7 @@ export default function Login() {
       <div className="flex flex-row h-screen w-screen justify-center items-center">
         {/* end of the login card box */}
         <div className=" flex items-center justify-center h-1/2 w-1/2 bg-base-200">
-          <div className="flex flex-col items-center justify-center p-10 w-full rounded-3xl">
+          <div className="flex flex-col items-center justify-center p-10 w-full">
             <h3 className=" text-white mb-10 text-center text-5xl">
               Welcome to Whisper
             </h3>
