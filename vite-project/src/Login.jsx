@@ -121,7 +121,7 @@ export default function Login() {
                   });
                   setTimeout(() => {
                     alert("Logged in Successfully.");
-                    navigate("/homepage");
+                    navigate("/dashboard");
                   }, 3000);
                 } catch (error) {
                   console.error("There was an error signing in user: ", error);

@@ -9,7 +9,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
-import { expressMiddleware } from "@as-integrations/express5";
+import { expressMiddleware } from "@as-integrations/express4";
 import cors from "cors";
 import { PubSub, withFilter } from "graphql-subscriptions";
 import { subscribe } from "diagnostics_channel";

@@ -18,6 +18,7 @@ import { createClient } from "graphql-ws";
 import { split, HttpLink } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
 import Profile from "./Profile.jsx";
+import DashBoard from "./DashBoard.jsx";
 
 const httpLink = new HttpLink({
   uri: "http://localhost:4000/graphql",
@@ -57,12 +58,12 @@ const router = createBrowserRouter([
     element: <CreateAccount />,
   },
   {
-    path: "/homepage",
-    element: <HomePage />,
-  },
-  {
-    path: "/profile",
-    element: <Profile />,
+    path: "/dashboard",
+    element: <DashBoard />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "/dashboard/profile", element: <Profile /> },
+    ],
   },
 ]);
 

@@ -85,3 +85,16 @@ export const GET_MESSAGES = gql`
     }
   }
 `;
+
+// export const EDIT_PROFILE = gql`
+//   mutation EditUserProfile( $user_id: String! $password: String $email: String $user_avatar: ){
+//   editProfile(
+//   user_id: $user_id
+//   password: $password
+//   email: $email
+//   user_avatar: $user_avatar
+//   ){
+
+//   }
+//   }
+// `;
