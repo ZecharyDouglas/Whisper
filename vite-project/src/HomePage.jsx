@@ -126,6 +126,8 @@ export default function HomePage() {
           </div>
           <div className=" col-span-3 bg-base-200 flex flex-col items-center">
             <div className=" w-full">
+              <h3 className=" text-center text-5xl">Active Requests</h3>
+              <div className="divider"></div>
               <h3 className=" text-center text-5xl">Discover</h3>
             </div>
             {/* render discovery cards here */}
@@ -153,6 +155,7 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
+            <div className="divider"></div>
           </div>
         </div>
       )}
